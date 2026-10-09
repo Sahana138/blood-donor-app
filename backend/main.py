@@ -5,10 +5,17 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from database import Base, engine, get_db
 import models, schemas, auth, donors, blood_requests, alerts
+from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Blood Donor Alert System")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(donors.router)
 app.include_router(blood_requests.router)
 app.include_router(alerts.router)
