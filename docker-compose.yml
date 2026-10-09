@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mysql:8
+    container_name: blood_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: blooddb
+      MYSQL_USER: blooduser
+      MYSQL_PASSWORD: bloodpass
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-prootpass"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    restart: on-failure
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: mysql+pymysql://blooduser:bloodpass@db:3306/blooddb
+      BASE_URL: http://127.0.0.1:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  dbdata:
