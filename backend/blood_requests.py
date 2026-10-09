@@ -89,24 +89,35 @@ def request_status(
     if not req or req.requester_id != user.id:
         raise HTTPException(status_code=404, detail="Request not found")
 
-    accepted_donor = None
-    accepted = db.query(models.Alert).filter_by(request_id=req.id, status="accepted").first()
-    if accepted:
-        donor = db.get(models.Donor, accepted.donor_id)
-        donor_user = db.get(models.User, donor.user_id)
-        accepted_donor = {
-            "name": donor_user.name,
-            "phone": donor_user.phone,
-            "blood_group": donor.blood_group,
-            "area": donor.area,
-        }
+    alert_rows = db.query(models.Alert).filter_by(request_id=req.id).all()
 
-    alerts_sent = db.query(models.Alert).filter_by(request_id=req.id).count()
+    accepted_donor = None
+    nearby = []
+    for a in alert_rows:
+        donor = db.get(models.Donor, a.donor_id)
+        if donor.latitude is not None and donor.longitude is not None:
+            nearby.append({
+                "lat": round(donor.latitude, 2),   # approximate on purpose
+                "lng": round(donor.longitude, 2),
+                "status": a.status,
+            })
+        if a.status == "accepted":
+            donor_user = db.get(models.User, donor.user_id)
+            accepted_donor = {
+                "name": donor_user.name,
+                "phone": donor_user.phone,
+                "blood_group": donor.blood_group,
+                "area": donor.area,
+            }
+
     return {
         "id": req.id,
         "blood_group": req.blood_group,
         "hospital": req.hospital,
         "status": req.status,
-        "donors_alerted": alerts_sent,
+        "latitude": req.latitude,
+        "longitude": req.longitude,
+        "donors_alerted": len(alert_rows),
+        "nearby_donors": nearby,
         "accepted_donor": accepted_donor,
     }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
+import MapView from "./MapView";
 
 const GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -85,6 +86,7 @@ export default function RequestBlood() {
               <div>Hospital: {status.hospital}</div>
               <div>Donors alerted: <b>{status.donors_alerted}</b></div>
               <div>Status: <b>{status.status}</b></div>
+              <MapView status={status} />
             </div>
             {status.status === "searching" && (
               <p>Waiting for a donor to accept. More donors are alerted automatically if nobody responds.</p>
