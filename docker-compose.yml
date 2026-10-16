@@ -1,3 +1,4 @@
+name: blood-donor-app
 services:
   db:
     image: mysql:8
@@ -18,7 +19,9 @@ services:
   backend:
     build: ./backend
     restart: on-failure
-    env_file: ./backend/.env
+    env_file:
+      - path: ./backend/.env
+        required: false
     environment:
       DATABASE_URL: mysql+pymysql://blooduser:bloodpass@db:3306/blooddb
       BASE_URL: http://127.0.0.1:8000
