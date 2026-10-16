@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api, logout } from "../api";
 import DonorProfile from "../components/DonorProfile";
 import RequestBlood from "../components/RequestBlood";
+import DonorInbox from "../components/DonorInbox";
 
 export default function Dashboard() {
   const [me, setMe] = useState(null);
@@ -28,7 +29,14 @@ export default function Dashboard() {
     <div className="card">
       <h2>Welcome, {me.name}</h2>
       <p>Role: <b>{me.role}</b></p>
-      {me.role === "donor" ? <DonorProfile /> : <RequestBlood />}
+      {me.role === "donor" ? (
+        <>
+          <DonorInbox />
+          <DonorProfile />
+        </>
+      ) : (
+        <RequestBlood />
+      )}
       <button className="secondary" onClick={handleLogout}>Logout</button>
     </div>
   );

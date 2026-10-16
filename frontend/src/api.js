@@ -1,11 +1,11 @@
 const API = "http://127.0.0.1:8000";
 
 export function getToken() {
-  return localStorage.getItem("token");
+  return sessionStorage.getItem("token");
 }
 
 export function logout() {
-  localStorage.clear();
+  sessionStorage.clear();
 }
 
 export async function api(path, { method = "GET", body, form } = {}) {
@@ -38,8 +38,8 @@ export async function login(email, password) {
     method: "POST",
     form: { username: email, password },
   });
-  localStorage.setItem("token", data.access_token);
+  sessionStorage.setItem("token", data.access_token);
   const me = await api("/auth/me");
-  localStorage.setItem("role", me.role);
+  sessionStorage.setItem("role", me.role);
   return me;
 }
