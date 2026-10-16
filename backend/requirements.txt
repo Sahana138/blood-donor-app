@@ -9,3 +9,5 @@ bcrypt==4.0.1
 python-dotenv
 pydantic[email]
 python-multipart
+pytest
+httpx
