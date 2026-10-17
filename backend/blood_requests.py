@@ -56,9 +56,7 @@ def create_request(
     db: Session = Depends(get_db),
     user: models.User = Depends(auth.get_current_user),
 ):
-    if user.role != "requester":
-        raise HTTPException(status_code=403, detail="Only requesters can create blood requests")
-
+    
     req = models.BloodRequest(requester_id=user.id, **data.model_dump())
     db.add(req)
     db.commit()

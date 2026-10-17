@@ -40,6 +40,9 @@ def send_wave(db, req, wave, radius_km):
     """Email the next 5 nearest eligible donors who were not alerted yet."""
     already = [a.donor_id for a in db.query(models.Alert)
                .filter(models.Alert.request_id == req.id).all()]
+    own = db.query(models.Donor).filter_by(user_id=req.requester_id).first()
+    if own:
+        already.append(own.id)
     found = find_matches(db, req.blood_group, req.latitude, req.longitude,
                          radius_km=radius_km, limit=5, exclude_ids=already)
     sent = []

@@ -35,8 +35,6 @@ def save_profile(
     db: Session = Depends(get_db),
     user: models.User = Depends(auth.get_current_user),
 ):
-    if user.role != "donor":
-        raise HTTPException(status_code=403, detail="Only donors can create a donor profile")
     donor = db.query(models.Donor).filter(models.Donor.user_id == user.id).first()
     if donor is None:
         donor = models.Donor(user_id=user.id)

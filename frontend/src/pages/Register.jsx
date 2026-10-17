@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { api, login } from "../api";
 
 export default function Register() {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", role: "donor" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", role: "member" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -35,11 +35,6 @@ export default function Register() {
         <input value={form.phone} onChange={(e) => update("phone", e.target.value)} required />
         <label>Password</label>
         <input type="password" value={form.password} onChange={(e) => update("password", e.target.value)} required />
-        <label>I want to</label>
-        <select value={form.role} onChange={(e) => update("role", e.target.value)}>
-          <option value="donor">Donate blood</option>
-          <option value="requester">Request blood</option>
-        </select>
         {error && <div className="error">{error}</div>}
         <button type="submit">Register</button>
       </form>

@@ -26,8 +26,8 @@ def home():
 
 @app.post("/auth/register", response_model=schemas.UserOut, status_code=201)
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    if user.role not in ("donor", "requester"):
-        raise HTTPException(status_code=400, detail="Role must be donor or requester")
+    if user.role not in ("donor", "requester", "member"):
+        raise HTTPException(status_code=400, detail="Invalid role")
     if db.query(models.User).filter(models.User.email == user.email).first():
         raise HTTPException(status_code=400, detail="Email already registered")
     new_user = models.User(
