@@ -103,10 +103,6 @@ pytest -v
 | GET | `/alerts/respond` | Accept or decline from an email link |
 
 ## Screenshots
-E:\saana\Projects\blood-donor-app\screenshots
-[Request page with map and accepted donor]
-[Donor inbox]
-[Jenkins stage view]
 
 ## Limitations and future work
 - Pending alert waves are held in memory and are lost if the server restarts. A job queue such as Celery would fix this.
